@@ -1,0 +1,3 @@
+Jul 14 10:20:01 kali sshd[1234]: Failed password for root from 192.168.1.100 port 22 ssh2
+Jul 14 10:20:15 kali sshd[1235]: Failed password for admin from 192.168.1.100 port 22 ssh2
+Jul 14 10:21:02 kali sshd[1236]: Failed password for user from 10.0.0.5 port 22 ssh2

@@ -19,9 +19,15 @@ parser.add_argument(
     help="HTML raporu oluştur"
 )
 
+parser.add_argument(
+    "--file",
+    type=str,
+    help="Analiz edilecek log dosyası"
+)
+
 args = parser.parse_args()
 
-attackers = get_attackers()
+attackers = get_attackers(args.file)
 
 print(Fore.CYAN + "=" * 35)
 print(Fore.CYAN + "      SSH LOG ANALYZER")
