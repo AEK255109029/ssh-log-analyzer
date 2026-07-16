@@ -34,8 +34,27 @@ print(Fore.CYAN + "      SSH LOG ANALYZER")
 print(Fore.CYAN + "=" * 35)
 
 total = sum(attackers.values())
+unique_ips = len(attackers)
 
-print(f"\nToplam Başarısız Giriş: {total}\n")
+print(f"\nToplam Başarısız Giriş: {total}")
+print(f"Benzersiz IP Sayısı   : {unique_ips}\n")
+
+if attackers:
+    top_ip = max(attackers, key=attackers.get)
+    top_count = attackers[top_ip]
+
+    print(Fore.CYAN + "===== Attack Summary =====")
+    print(f"Top Attacker : {top_ip}")
+    print(f"Attempts     : {top_count}")
+
+    if top_count >= 5:
+        print(Fore.RED + "Status       : 🚨 BRUTE FORCE DETECTED")
+    elif top_count >= 3:
+        print(Fore.YELLOW + "Status       : Suspicious Activity")
+    else:
+        print(Fore.GREEN + "Status       : Normal")
+
+    print(Fore.CYAN + "=" * 35)
 
 for ip, count in attackers.items():
 
@@ -59,3 +78,9 @@ if args.json:
 
 if args.html:
     save_html(attackers)
+
+
+
+
+
+
