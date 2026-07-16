@@ -27,7 +27,7 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-attackers = get_attackers(args.file)
+attackers, users = get_attackers(args.file)
 
 print(Fore.CYAN + "=" * 35)
 print(Fore.CYAN + "      SSH LOG ANALYZER")
@@ -55,6 +55,13 @@ if attackers:
         print(Fore.GREEN + "Status       : Normal")
 
     print(Fore.CYAN + "=" * 35)
+
+print(Fore.CYAN + "\n===== Targeted Users =====\n")
+
+for user, count in users.items():
+    print(f"{user:<15} : {count} attempts")
+
+print(Fore.CYAN + "=" * 35)
 
 for ip, count in attackers.items():
 
