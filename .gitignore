@@ -1,7 +1,9 @@
 venv/
 __pycache__/
 *.pyc
-main.py.bak
-reports/*.csv
+
 reports/*.json
 reports/*.html
+reports/*.csv
+
+*.log
