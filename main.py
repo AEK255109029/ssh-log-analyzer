@@ -5,6 +5,7 @@ from parser import get_attackers
 from report import save_json, save_html, save_csv
 from utils import get_risk
 from monitor import live_monitor
+from statistics import risk_summary, top_attackers, top_users
 
 init(autoreset=True)
 
@@ -31,7 +32,7 @@ parser.add_argument(
 parser.add_argument(
     "--file",
     type=str,
-    help="Analyze a custom log file"
+    help="Analyze custom log file"
 )
 
 parser.add_argument(
@@ -42,12 +43,12 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-# Live monitoring mode
+# Live monitoring
 if args.live:
     live_monitor()
     exit()
 
-# Analyze logs
+# Parse logs
 attackers, users = get_attackers(args.file)
 
 print(Fore.CYAN + "=" * 45)
@@ -60,44 +61,55 @@ unique_ips = len(attackers)
 print(f"\nTotal Failed Logins : {total}")
 print(f"Unique IPs          : {unique_ips}")
 
+# Risk Summary
+summary = risk_summary(attackers)
+
+print(Fore.CYAN + "\n===== Risk Summary =====")
+print(f"HIGH   : {summary['HIGH']}")
+print(f"MEDIUM : {summary['MEDIUM']}")
+print(f"LOW    : {summary['LOW']}")
+
 # Attack Summary
 print(Fore.CYAN + "\n===== Attack Summary =====")
 
 if attackers:
-
     top_ip = max(attackers, key=attackers.get)
     top_count = attackers[top_ip]
-    risk = get_risk(top_count)
 
     print(f"Top Attacker : {top_ip}")
     print(f"Attempts     : {top_count}")
-    print(f"Risk         : {risk}")
-
+    print(f"Risk         : {get_risk(top_count)}")
 else:
     print("No failed login attempts found.")
 
-# Targeted Users
-print(Fore.CYAN + "\n===== Targeted Users =====")
+# Top Attackers
+print(Fore.CYAN + "\n===== Top 5 Attackers =====")
+
+if attackers:
+    for ip, count in top_attackers(attackers):
+        print(f"{ip:<20} {count}")
+else:
+    print("No attacker data.")
+
+# Top Targeted Users
+print(Fore.CYAN + "\n===== Top 5 Targeted Users =====")
 
 if users:
-
-    for user, count in sorted(users.items(),
-                              key=lambda x: x[1],
-                              reverse=True):
-
+    for user, count in top_users(users):
         print(f"{user:<20} {count}")
-
 else:
     print("No targeted users found.")
 
-# Attacker List
-print(Fore.CYAN + "\n===== Attacker IPs =====")
+# Detailed IP List
+print(Fore.CYAN + "\n===== Attacker Details =====")
 
 if attackers:
 
-    for ip, count in sorted(attackers.items(),
-                            key=lambda x: x[1],
-                            reverse=True):
+    for ip, count in sorted(
+        attackers.items(),
+        key=lambda x: x[1],
+        reverse=True
+    ):
 
         risk = get_risk(count)
 

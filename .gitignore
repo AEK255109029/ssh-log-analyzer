@@ -7,3 +7,4 @@ reports/*.html
 reports/*.csv
 
 *.log
+*.bak
